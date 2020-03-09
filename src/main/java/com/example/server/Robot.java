@@ -1,26 +1,33 @@
 package com.example.server;
 
+import com.example.RobotCfg;
+
 import java.time.LocalDateTime;
 
+/**
+ * 机器人类
+ */
 public class Robot {
-    public static final int HEARTBEAT_INTERVAL = 60; // 心跳周期（秒）
-
-    private String id;
+    private String id; // 身份识别ID
     private String ip;
     private String connReqPort;
-    private volatile LocalDateTime lastHeartbeatTime;
+    private volatile LocalDateTime lastHeartbeatTime; // 最近一次心跳时间戳
 
     public Robot(String id) {
         this.id = id;
     }
 
-    public Boolean isAlive() {
+    /**
+     * 判断是否在线。如果连续三个心跳周期没有收到消息，则认为离线。
+     * @return
+     */
+    public boolean isAlive() {
         LocalDateTime lastTime = lastHeartbeatTime;
         if (lastTime == null) {
-            return null;
+            return false;
         }
 
-        LocalDateTime deadline = lastTime.plusSeconds(HEARTBEAT_INTERVAL * 3);
+        LocalDateTime deadline = lastTime.plusSeconds(RobotCfg.HEARTBEAT_INTERVAL * 3);
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(deadline);
     }

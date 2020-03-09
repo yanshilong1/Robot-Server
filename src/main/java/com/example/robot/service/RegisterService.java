@@ -17,21 +17,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * 向Server进行注册
+ */
 public class RegisterService implements Runnable {
 
     @Override
     public void run() {
         while (true) {
-            try (Socket socket = connect();
+            try (Socket socket = new Socket(ServerCfg.hostName, ServerCfg.portNumber);
                  OutputStream out = socket.getOutputStream();
                  InputStream in = socket.getInputStream()) {
                 process(in, out);
                 return;
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return;
+                System.out.println("注册失败: " + e.getMessage());
             }
 
             try {
@@ -42,6 +42,12 @@ public class RegisterService implements Runnable {
         }
     }
 
+    /**
+     * 处理注册流程
+     * @param in
+     * @param out
+     * @throws IOException
+     */
     private void process(InputStream in, OutputStream out) throws IOException {
         // 发Inform
         Inform inform = new Inform();
@@ -85,17 +91,7 @@ public class RegisterService implements Runnable {
         // 收Idle
         msg = MessageIOUtils.read(in);
         System.out.println("robot发送: " + msg);
-        System.out.println("注册成功");
-    }
 
-    private Socket connect() throws InterruptedException {
-        while (true) {
-            try {
-                return new Socket(ServerCfg.hostName, ServerCfg.portNumber);
-            } catch (Exception e) {
-                System.out.println("connect server failed: " + e.getMessage());
-            }
-            Thread.sleep(5000);
-        }
+        System.out.println("注册成功");
     }
 }

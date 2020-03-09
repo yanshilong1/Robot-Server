@@ -17,16 +17,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 心跳服务。
+ */
 public class HeartbeatService implements Runnable {
 
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private static final HeartbeatService INSTANCE = new HeartbeatService();
 
+    /**
+     * 启动心跳服务
+     */
     public static void start() {
         executor.scheduleAtFixedRate(INSTANCE, 0, 30, TimeUnit.SECONDS);
     }
 
+    /**
+     * 停止心跳服务
+     */
     public static void stop() {
         executor.shutdown();
         try {
@@ -47,6 +56,12 @@ public class HeartbeatService implements Runnable {
         }
     }
 
+    /**
+     * 处理心跳流程
+     * @param in
+     * @param out
+     * @throws IOException
+     */
     private void process(InputStream in, OutputStream out) throws IOException {
         // 发Inform
         Inform inform = new Inform();

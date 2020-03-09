@@ -44,7 +44,7 @@ public class DeployCfgService extends BaseService {
         Idle req = payload.castAs(Idle.class);
         SetConfiguration setCfgReq = new SetConfiguration();
         setCfgReq.heartbeatInterval = 20;
-        super.commandId = setCfgReq.commandId;
+        super.reqCommandId = setCfgReq.commandId;
         phase = Phase.COMPLETE;
         return setCfgReq;
     }

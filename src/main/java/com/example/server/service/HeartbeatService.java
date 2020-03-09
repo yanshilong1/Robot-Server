@@ -9,6 +9,9 @@ import com.example.server.Registry;
 
 import java.time.LocalDateTime;
 
+/**
+ * 心跳服务
+ */
 public class HeartbeatService extends BaseService {
 
     private enum Phase {
@@ -33,6 +36,11 @@ public class HeartbeatService extends BaseService {
         return resp;
     }
 
+    /**
+     * 处理Inform消息
+     * @param request
+     * @return
+     */
     private Payload handleInform(Payload request) {
         Inform inform = request.castAs(Inform.class);
         String robotId = inform.getRobotId();
@@ -42,8 +50,13 @@ public class HeartbeatService extends BaseService {
         return new InformResponse(inform.getCommandId());
     }
 
+    /**
+     * 处理Idle消息
+     * @param request
+     * @return
+     */
     private Payload handleIdle(Payload request) {
         Idle req = request.castAs(Idle.class);
-        return new Idle();
+        return new Idle(); // close session
     }
 }

@@ -61,7 +61,7 @@ public class RegisterService extends BaseService {
         Idle req = payload.castAs(Idle.class);
         phase = Phase.COMPLETE;
         Diagnostic diagReq = new Diagnostic();
-        super.commandId = diagReq.commandId;
+        super.reqCommandId = diagReq.commandId;
         return diagReq;
     }
 

@@ -1,9 +1,13 @@
 package com.example.server;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
+/**
+ * 客户端注册管理
+ */
 public class Registry {
     private static final ConcurrentSkipListMap<String, Robot> map = new ConcurrentSkipListMap<>();
 
@@ -20,6 +24,10 @@ public class Registry {
     }
 
     public static void print() {
-        System.out.println("已注册Robot: " + list().stream().map(Robot::getId).collect(Collectors.toList()));
+        List<String> clientIdList = list()
+                .stream()
+                .map(Robot::getId)
+                .collect(Collectors.toList());
+        System.out.println("已注册Robot: " + clientIdList);
     }
 }
