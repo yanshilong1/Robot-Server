@@ -1,15 +1,24 @@
 package com.example.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.example.rpc.Message;
+import com.example.rpc.PayloadTypes;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.function.Function;
 
+/**
+ * 处理Message消息的读写。
+ */
 public class MessageIOUtils {
     public static void write(OutputStream out, Message msg) throws IOException {
-        out.write(MessageUtils.robotMsgToTcpByte(msg));
+        out.write(robotMsgToTcpByte(msg));
         out.flush();
     }
 
@@ -42,13 +51,13 @@ public class MessageIOUtils {
     public static int readLength(InputStream in) throws IOException {
         byte[] length = new byte[4];
         read(in, length);
-        return MessageUtils.byte4ToInt(length);
+        return byte4ToInt(length);
     }
 
     public static Message readMessage(InputStream in, int msgLength) throws IOException {
         byte[] msg = new byte[msgLength];
         read(in, msg);
-        return MessageUtils.serverTcpByteToMessage(msg);
+        return serverTcpByteToMessage(msg);
     }
 
     public static void read(InputStream in, byte[] data) throws IOException {
@@ -62,5 +71,61 @@ public class MessageIOUtils {
             }
             sumLength += length;
         }
+    }
+
+
+    public static byte[] msgToTcpByte(Message msg, Function<byte[], byte[]> encryptFunc) {
+        byte[] msgByte = null;
+        byte[] msgLengthByte = {0, 0, 0, 0};
+        if (msg != null) {
+            msgByte = JSON.toJSONString(msg).getBytes(StandardCharsets.UTF_8);
+            msgByte = encryptFunc.apply(msgByte);
+            msgLengthByte = positiveIntTo4Byte(msgByte.length);
+        }
+        return MiscUtils.mergeByteArray(Message.MAGIC_NUMBER, Message.MESSAGE_VERSION, msgLengthByte, msgByte);
+    }
+
+    public static byte[] robotMsgToTcpByte(Message msg) {
+        return msgToTcpByte(msg, PgpUtils::robotEncryptPGP);
+    }
+
+    public static byte[] serverMsgToTcpByte(Message msg) {
+        return msgToTcpByte(msg, PgpUtils::serverEncryptPGP);
+    }
+
+    public static Message tcpByteToMessage(byte[] tcpByte, Function<byte[], byte[]> decryptFunc) {
+        tcpByte = decryptFunc.apply(tcpByte);
+        String msgJson = new String(tcpByte, StandardCharsets.UTF_8);
+        return JSON.parseObject(msgJson, Message.class);
+    }
+
+    public static Message robotTcpByteToMessage(byte[] tcpByte) {
+        return tcpByteToMessage(tcpByte, PgpUtils::robotDecryptPGP);
+    }
+
+    public static Message serverTcpByteToMessage(byte[] tcpByte) {
+        return tcpByteToMessage(tcpByte, PgpUtils::serverDecryptPGP);
+    }
+
+
+    private static byte[] positiveIntTo4Byte(int posInt) {
+        return longTo4Byte(posInt);
+    }
+
+    public static int byte4ToInt(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getInt();
+    }
+
+    private static byte[] longTo4Byte(long value) {
+        byte[] data = new byte[4];
+        data[3] = (byte) value;
+        data[2] = (byte) (value >>> 8);
+        data[1] = (byte) (value >>> 16);
+        data[0] = (byte) (value >>> 24);
+        return data;
+    }
+
+    private static long byte4ToLong(byte[] bytes) {
+        return byte4ToInt(bytes) & 0xFFFFFFFFL;
     }
 }

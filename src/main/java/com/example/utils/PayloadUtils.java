@@ -14,6 +14,9 @@ import com.example.rpc.server.InformResponse;
 import com.example.rpc.server.Register;
 import com.example.rpc.server.RegisterResponse;
 
+/**
+ * 处理Message与Payload的转换
+ */
 public class PayloadUtils {
     public static Payload toPayload(Message msg) {
         Payload payload;

@@ -10,6 +10,9 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+/**
+ * PGP加密算法工具类
+ */
 public class PgpUtils {
 
     public static char[] ksPassword = "123456".toCharArray();
