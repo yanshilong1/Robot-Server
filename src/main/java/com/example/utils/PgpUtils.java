@@ -345,12 +345,12 @@ public class PgpUtils {
     }
 
     private static void debug(String msg, byte[] data) {
-        data = data == null ? new byte[0] : data;
-        logger.debug(msg + " " + Hex.encodeHexString(data));
+//        data = data == null ? new byte[0] : data;
+//        logger.debug(msg + " " + Hex.encodeHexString(data));
     }
 
     private static void debug(String msg, boolean data) {
-        logger.debug(msg + " " + data);
+//        logger.debug(msg + " " + data);
     }
 
 

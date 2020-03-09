@@ -56,7 +56,7 @@ public class SessionHandler extends BaseService implements Runnable {
                 logger.debug("server发送：" + outputMsg);
             }
         } catch (Throwable e) {
-            logger.warn("Session closed", e);
+            logger.warn("Session closed " + e.getMessage());
         }
     }
 
