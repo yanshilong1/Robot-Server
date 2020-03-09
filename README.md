@@ -28,3 +28,9 @@ JDK 1.8
 
 ## 注册流程
 ![注册流程时序图](./design/RegisterSeq.png)
+
+## 证书库生成
+
+生成证书库文件
+1. 客户端：`keytool -genkeypair -keyalg "RSA" -alias robot -dname "cn=robot" -keystore ./keystore -storetype pkcs12 -storepass 123456`
+2. 服务端：`keytool -genkeypair -keyalg "RSA" -alias server -dname "cn=server" -keystore ./keystore -storetype pkcs12 -storepass 123456`
