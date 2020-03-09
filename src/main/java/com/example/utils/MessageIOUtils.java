@@ -2,7 +2,6 @@ package com.example.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.example.rpc.Message;
-import com.example.rpc.PayloadTypes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,10 +14,14 @@ import java.util.function.Function;
 
 /**
  * 处理Message消息的读写。
+ *
+ * Message二进制格式为：
+ *
+ * [MagicNum(4byte)] + [version(1byte)] + [dataLength(4byte)] + [data(Message)]
  */
 public class MessageIOUtils {
     public static void write(OutputStream out, Message msg) throws IOException {
-        out.write(robotMsgToTcpByte(msg));
+        out.write(robotSerialize(msg));
         out.flush();
     }
 
@@ -60,6 +63,12 @@ public class MessageIOUtils {
         return serverTcpByteToMessage(msg);
     }
 
+    /**
+     * 从输入流中读出指定量数据。
+     * @param in
+     * @param data
+     * @throws IOException
+     */
     public static void read(InputStream in, byte[] data) throws IOException {
         int dataLength = data.length;
         int sumLength = 0;
@@ -73,8 +82,13 @@ public class MessageIOUtils {
         }
     }
 
-
-    public static byte[] msgToTcpByte(Message msg, Function<byte[], byte[]> encryptFunc) {
+    /**
+     * 将Message对象序列化为二进制数据。
+     * @param msg Message对象
+     * @param encryptFunc 加密函数
+     * @return 可传输的二进制数据
+     */
+    public static byte[] serialize(Message msg, Function<byte[], byte[]> encryptFunc) {
         byte[] msgByte = null;
         byte[] msgLengthByte = {0, 0, 0, 0};
         if (msg != null) {
@@ -85,37 +99,77 @@ public class MessageIOUtils {
         return MiscUtils.mergeByteArray(Message.MAGIC_NUMBER, Message.MESSAGE_VERSION, msgLengthByte, msgByte);
     }
 
-    public static byte[] robotMsgToTcpByte(Message msg) {
-        return msgToTcpByte(msg, PgpUtils::robotEncryptPGP);
+    /**
+     * 客户端序列化Message
+     * @param msg
+     * @return
+     */
+    public static byte[] robotSerialize(Message msg) {
+        return serialize(msg, PgpUtils::robotEncryptPGP);
     }
 
+    /**
+     * 服务端序列化Message
+     * @param msg
+     * @return
+     */
     public static byte[] serverMsgToTcpByte(Message msg) {
-        return msgToTcpByte(msg, PgpUtils::serverEncryptPGP);
+        return serialize(msg, PgpUtils::serverEncryptPGP);
     }
 
-    public static Message tcpByteToMessage(byte[] tcpByte, Function<byte[], byte[]> decryptFunc) {
+    /**
+     * 将二进制数据反序列化为Message对象
+     * @param tcpByte
+     * @param decryptFunc
+     * @return
+     */
+    public static Message deserialize(byte[] tcpByte, Function<byte[], byte[]> decryptFunc) {
         tcpByte = decryptFunc.apply(tcpByte);
         String msgJson = new String(tcpByte, StandardCharsets.UTF_8);
         return JSON.parseObject(msgJson, Message.class);
     }
 
-    public static Message robotTcpByteToMessage(byte[] tcpByte) {
-        return tcpByteToMessage(tcpByte, PgpUtils::robotDecryptPGP);
+    /**
+     * 客户端反序列化
+     * @param tcpByte
+     * @return
+     */
+    public static Message robotDeserialize(byte[] tcpByte) {
+        return deserialize(tcpByte, PgpUtils::robotDecryptPGP);
     }
 
+    /**
+     * 服务端反序列化
+     * @param tcpByte
+     * @return
+     */
     public static Message serverTcpByteToMessage(byte[] tcpByte) {
-        return tcpByteToMessage(tcpByte, PgpUtils::serverDecryptPGP);
+        return deserialize(tcpByte, PgpUtils::serverDecryptPGP);
     }
 
-
+    /**
+     * 将Int转换为4byte数据。
+     * @param posInt
+     * @return
+     */
     private static byte[] positiveIntTo4Byte(int posInt) {
         return longTo4Byte(posInt);
     }
 
+    /**
+     * 将4byte数据转换为Int
+     * @param bytes
+     * @return
+     */
     public static int byte4ToInt(byte[] bytes) {
         return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getInt();
     }
 
+    /**
+     * 将long转换为4byte数据
+     * @param value
+     * @return
+     */
     private static byte[] longTo4Byte(long value) {
         byte[] data = new byte[4];
         data[3] = (byte) value;
