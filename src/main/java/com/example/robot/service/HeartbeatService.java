@@ -1,5 +1,6 @@
 package com.example.robot.service;
 
+import com.example.robot.Client;
 import com.example.rpc.EventTypes;
 import com.example.rpc.Idle;
 import com.example.rpc.Message;
@@ -8,6 +9,8 @@ import com.example.utils.PayloadUtils;
 import com.example.RobotCfg;
 import com.example.ServerCfg;
 import com.example.rpc.server.Inform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +24,8 @@ import java.util.concurrent.TimeUnit;
  * 心跳服务。
  */
 public class HeartbeatService implements Runnable {
+
+    private static final Logger logger = LogManager.getLogger(Client.class);
 
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
@@ -52,7 +57,7 @@ public class HeartbeatService implements Runnable {
              InputStream in = socket.getInputStream()) {
             process(in, out);
         } catch (IOException e) {
-            System.out.println("心跳失败: " + e.getMessage());
+            logger.warn("心跳失败", e);
         }
     }
 
@@ -68,22 +73,22 @@ public class HeartbeatService implements Runnable {
         inform.setEvent(EventTypes.HEARTBEAT);
         inform.setRobotId(RobotCfg.ROBOT_ID);
         Message msg = PayloadUtils.toMessage(inform);
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收InformResponse
         msg = MessageIOUtils.read(in);
-        System.out.println("robot接收: " + msg);
+        logger.debug("robot接收: " + msg);
 
         // 发Idle
         msg = PayloadUtils.toMessage(new Idle());
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收Idle
         msg = MessageIOUtils.read(in);
-        System.out.println("robot发送: " + msg);
-        System.out.println("心跳成功");
+        logger.debug("robot发送: " + msg);
+        logger.debug("心跳成功");
     }
 
 }

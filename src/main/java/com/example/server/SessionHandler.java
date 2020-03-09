@@ -9,6 +9,8 @@ import com.example.server.service.HeartbeatService;
 import com.example.server.service.RegisterService;
 import com.example.utils.MessageIOUtils;
 import com.example.utils.PayloadUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +20,8 @@ import java.net.Socket;
  * 会话处理
  */
 public class SessionHandler extends BaseService implements Runnable {
+
+    private static final Logger logger = LogManager.getLogger(SessionHandler.class);
 
     private Phase phase = Phase.INIT;
     private Socket client;
@@ -44,15 +48,15 @@ public class SessionHandler extends BaseService implements Runnable {
              OutputStream out = client.getOutputStream()) {
             while (true) {
                 Message inputMsg = MessageIOUtils.read(in);
-                System.out.println("server接收：" + inputMsg);
+                logger.debug("server接收：" + inputMsg);
                 Payload inputPayload = PayloadUtils.toPayload(inputMsg);
                 Payload outputPayload = process(inputPayload);
                 Message outputMsg = PayloadUtils.toMessage(outputPayload);
                 MessageIOUtils.write(out, outputMsg);
-                System.out.println("server发送：" + outputMsg);
+                logger.debug("server发送：" + outputMsg);
             }
         } catch (Throwable e) {
-            System.out.println("Session closed" + e.getMessage());
+            logger.warn("Session closed", e);
         }
     }
 
@@ -65,7 +69,7 @@ public class SessionHandler extends BaseService implements Runnable {
     public Payload process(Payload request) {
         if (phase == Phase.INIT) {
             service = selectService(request);
-            System.out.println("New Session start, service: " + service.getClass().getSimpleName());
+            logger.debug("New Session start, service: " + service.getClass().getSimpleName());
             phase = Phase.PROCESS;
         }
         return service.process(request);

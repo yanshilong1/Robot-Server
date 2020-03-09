@@ -2,10 +2,15 @@ package com.example.robot;
 
 import com.example.robot.service.HeartbeatService;
 import com.example.robot.service.RegisterService;
+import com.example.utils.PgpUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Client {
+    private static final Logger logger = LogManager.getLogger(Client.class);
+
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("robot main start");
+        logger.info("robot main start");
         register();
         HeartbeatService.start();
         try {
@@ -13,7 +18,7 @@ public class Client {
         } finally {
             HeartbeatService.stop();
         }
-        System.out.println("robot main exit");
+        logger.info("robot main exit");
     }
 
     /**

@@ -1,16 +1,19 @@
 package com.example.robot.service;
 
+import com.example.RobotCfg;
+import com.example.ServerCfg;
+import com.example.robot.Client;
 import com.example.rpc.EventTypes;
 import com.example.rpc.Idle;
 import com.example.rpc.Message;
-import com.example.utils.MessageIOUtils;
-import com.example.utils.PayloadUtils;
 import com.example.rpc.client.Diagnostic;
 import com.example.rpc.client.DiagnosticResponse;
 import com.example.rpc.server.Inform;
 import com.example.rpc.server.Register;
-import com.example.RobotCfg;
-import com.example.ServerCfg;
+import com.example.utils.MessageIOUtils;
+import com.example.utils.PayloadUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +24,7 @@ import java.net.Socket;
  * 向Server进行注册
  */
 public class RegisterService implements Runnable {
+    private static final Logger logger = LogManager.getLogger(Client.class);
 
     @Override
     public void run() {
@@ -31,7 +35,7 @@ public class RegisterService implements Runnable {
                 process(in, out);
                 return;
             } catch (IOException e) {
-                System.out.println("注册失败: " + e.getMessage());
+                logger.warn("注册失败", e);
             }
 
             try {
@@ -53,45 +57,45 @@ public class RegisterService implements Runnable {
         Inform inform = new Inform();
         inform.setEvent(EventTypes.BOOTSTRAP);
         Message msg = PayloadUtils.toMessage(inform);
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收InformResponse
         msg = MessageIOUtils.read(in);
-        System.out.println("robot接收: " + msg);
+        logger.debug("robot接收: " + msg);
 
         // 发Register
         Register registerReq = new Register();
         registerReq.setRobotId(RobotCfg.ROBOT_ID);
         msg = PayloadUtils.toMessage(registerReq);
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收RegisterResponse
         msg = MessageIOUtils.read(in);
-        System.out.println("robot接收: " + msg);
+        logger.debug("robot接收: " + msg);
 
         // 发Idle
         msg = PayloadUtils.toMessage(new Idle());
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收Diagnostic
         msg = MessageIOUtils.read(in);
-        System.out.println("robot接收: " + msg);
+        logger.debug("robot接收: " + msg);
         Diagnostic diagReq = PayloadUtils.toPayload(msg).castAs(Diagnostic.class);
 
         // 发DiagnosticResponse
         DiagnosticResponse diagResp = new DiagnosticResponse(diagReq.commandId);
         diagResp.setRobotId(RobotCfg.ROBOT_ID);
         msg = PayloadUtils.toMessage(diagResp);
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot接收: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收Idle
         msg = MessageIOUtils.read(in);
-        System.out.println("robot发送: " + msg);
+        logger.debug("robot发送: " + msg);
 
-        System.out.println("注册成功");
+        logger.debug("Robot注册成功");
     }
 }

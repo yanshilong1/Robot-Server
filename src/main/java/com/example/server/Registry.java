@@ -1,5 +1,8 @@
 package com.example.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -9,6 +12,8 @@ import java.util.stream.Collectors;
  * 客户端注册管理
  */
 public class Registry {
+    private static final Logger logger = LogManager.getLogger(Registry.class);
+
     private static final ConcurrentSkipListMap<String, Robot> map = new ConcurrentSkipListMap<>();
 
     public static boolean register(Robot robot) {
@@ -28,6 +33,6 @@ public class Registry {
                 .stream()
                 .map(Robot::getId)
                 .collect(Collectors.toList());
-        System.out.println("已注册Robot: " + clientIdList);
+        logger.info("已注册Robot: " + clientIdList);
     }
 }

@@ -1,5 +1,10 @@
 package com.example.utils;
 
+import com.example.server.SessionHandler;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
@@ -14,6 +19,8 @@ import java.security.cert.CertificateException;
  * PGP加密算法工具类
  */
 public class PgpUtils {
+
+    private static final Logger logger = LogManager.getLogger(PgpUtils.class);
 
     public static char[] ksPassword = "123456".toCharArray();
 
@@ -89,7 +96,7 @@ public class PgpUtils {
      */
     private static byte[] sha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        return md.digest(input.getBytes("UTF-8"));
+        return md.digest(input.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -256,7 +263,6 @@ public class PgpUtils {
         Certificate receiverCert = getCert(ks, receiverEntryAlias);
         byte[] encryptedSecretKey = encryptRSA(secretKey.getEncoded(), receiverCert);
         debug("PGP发送方，对加密密钥加密", encryptedSecretKey);
-//        System.out.println(encryptedSecretKey.length);
 
         // 拼接对称密钥和密文
         byte[] secretKeyAndCipherText = MiscUtils.mergeByteArray(encryptedSecretKey, cypherText);
@@ -339,12 +345,12 @@ public class PgpUtils {
     }
 
     private static void debug(String msg, byte[] data) {
-//        data = data == null ? new byte[0] : data;
-//        System.out.println(msg + " " + Hex.encodeHexString(data));
+        data = data == null ? new byte[0] : data;
+        logger.debug(msg + " " + Hex.encodeHexString(data));
     }
 
     private static void debug(String msg, boolean data) {
-//        System.out.println(msg + " " + data);
+        logger.debug(msg + " " + data);
     }
 
 
