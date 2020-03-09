@@ -16,6 +16,7 @@ public class Server {
     public static void main(String[] args) {
         logger.info("Server start");
         ExecutorService executor = null;
+        //启动一个serverSocket
         try (ServerSocket serverSocket = new ServerSocket(ServerCfg.portNumber);) {
             executor = Executors.newFixedThreadPool(5);
             logger.info("Waiting for clients on port: " + ServerCfg.portNumber);
