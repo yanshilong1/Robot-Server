@@ -1,7 +1,7 @@
-package com.example.entity.rpc.client;
+package com.example.rpc.client;
 
-import com.example.entity.rpc.Payload;
-import com.example.entity.rpc.PayloadTypes;
+import com.example.rpc.Payload;
+import com.example.rpc.PayloadTypes;
 
 import java.util.UUID;
 

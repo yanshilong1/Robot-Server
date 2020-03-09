@@ -1,4 +1,4 @@
-package com.example.entity.rpc;
+package com.example.rpc;
 
 public enum EventTypes {
     BOOTSTRAP,

@@ -1,10 +1,10 @@
 package com.example.server.service;
 
-import com.example.entity.Robot;
-import com.example.entity.rpc.Idle;
-import com.example.entity.rpc.Payload;
-import com.example.entity.rpc.server.Inform;
-import com.example.entity.rpc.server.InformResponse;
+import com.example.server.Robot;
+import com.example.rpc.Idle;
+import com.example.rpc.Payload;
+import com.example.rpc.server.Inform;
+import com.example.rpc.server.InformResponse;
 import com.example.server.Registry;
 
 import java.time.LocalDateTime;

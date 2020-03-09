@@ -1,12 +1,15 @@
 package com.example.robot.service;
 
-import com.example.MessageIOUtils;
-import com.example.PayloadUtils;
+import com.example.rpc.EventTypes;
+import com.example.rpc.Idle;
+import com.example.rpc.Message;
+import com.example.utils.MessageIOUtils;
+import com.example.utils.PayloadUtils;
 import com.example.entity.rpc.*;
-import com.example.entity.rpc.client.Diagnostic;
-import com.example.entity.rpc.client.DiagnosticResponse;
-import com.example.entity.rpc.server.Inform;
-import com.example.entity.rpc.server.Register;
+import com.example.rpc.client.Diagnostic;
+import com.example.rpc.client.DiagnosticResponse;
+import com.example.rpc.server.Inform;
+import com.example.rpc.server.Register;
 import com.example.RobotCfg;
 import com.example.ServerCfg;
 

@@ -1,6 +1,6 @@
 package com.example.server.service;
 
-import com.example.entity.rpc.Payload;
+import com.example.rpc.Payload;
 
 public abstract class BaseService {
     protected String commandId;

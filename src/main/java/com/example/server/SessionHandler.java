@@ -1,10 +1,10 @@
 package com.example.server;
 
-import com.example.entity.rpc.Message;
-import com.example.entity.rpc.Payload;
-import com.example.PayloadUtils;
-import com.example.entity.rpc.server.Inform;
-import com.example.MessageIOUtils;
+import com.example.rpc.Message;
+import com.example.rpc.Payload;
+import com.example.utils.PayloadUtils;
+import com.example.rpc.server.Inform;
+import com.example.utils.MessageIOUtils;
 import com.example.server.service.BaseService;
 import com.example.server.service.DeployCfgService;
 import com.example.server.service.HeartbeatService;

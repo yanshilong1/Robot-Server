@@ -1,15 +1,15 @@
 package com.example.server.service;
 
-import com.example.entity.Robot;
-import com.example.entity.rpc.Idle;
-import com.example.entity.rpc.Payload;
-import com.example.entity.rpc.ResponseStatus;
-import com.example.entity.rpc.client.Diagnostic;
-import com.example.entity.rpc.client.DiagnosticResponse;
-import com.example.entity.rpc.server.Inform;
-import com.example.entity.rpc.server.InformResponse;
-import com.example.entity.rpc.server.Register;
-import com.example.entity.rpc.server.RegisterResponse;
+import com.example.server.Robot;
+import com.example.rpc.Idle;
+import com.example.rpc.Payload;
+import com.example.rpc.ResponseStatus;
+import com.example.rpc.client.Diagnostic;
+import com.example.rpc.client.DiagnosticResponse;
+import com.example.rpc.server.Inform;
+import com.example.rpc.server.InformResponse;
+import com.example.rpc.server.Register;
+import com.example.rpc.server.RegisterResponse;
 import com.example.server.Registry;
 
 public class RegisterService extends BaseService {

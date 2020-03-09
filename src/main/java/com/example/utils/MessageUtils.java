@@ -1,8 +1,8 @@
-package com.example;
+package com.example.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.example.entity.rpc.Message;
-import com.example.entity.rpc.PayloadTypes;
+import com.example.rpc.Message;
+import com.example.rpc.PayloadTypes;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

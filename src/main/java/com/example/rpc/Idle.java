@@ -1,4 +1,4 @@
-package com.example.entity.rpc;
+package com.example.rpc;
 
 public class Idle extends Payload {
     public Idle() {

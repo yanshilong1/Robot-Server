@@ -1,7 +1,6 @@
-package com.example;
+package com.example.utils;
 
-import com.example.MessageUtils;
-import com.example.entity.rpc.Message;
+import com.example.rpc.Message;
 
 import java.io.IOException;
 import java.io.InputStream;

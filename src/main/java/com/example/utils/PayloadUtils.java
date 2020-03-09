@@ -1,18 +1,18 @@
-package com.example;
+package com.example.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.example.entity.rpc.Idle;
-import com.example.entity.rpc.Message;
-import com.example.entity.rpc.Payload;
-import com.example.entity.rpc.PayloadTypes;
-import com.example.entity.rpc.client.Diagnostic;
-import com.example.entity.rpc.client.DiagnosticResponse;
-import com.example.entity.rpc.client.SetConfiguration;
-import com.example.entity.rpc.client.SetConfigurationResponse;
-import com.example.entity.rpc.server.Inform;
-import com.example.entity.rpc.server.InformResponse;
-import com.example.entity.rpc.server.Register;
-import com.example.entity.rpc.server.RegisterResponse;
+import com.example.rpc.Idle;
+import com.example.rpc.Message;
+import com.example.rpc.Payload;
+import com.example.rpc.PayloadTypes;
+import com.example.rpc.client.Diagnostic;
+import com.example.rpc.client.DiagnosticResponse;
+import com.example.rpc.client.SetConfiguration;
+import com.example.rpc.client.SetConfigurationResponse;
+import com.example.rpc.server.Inform;
+import com.example.rpc.server.InformResponse;
+import com.example.rpc.server.Register;
+import com.example.rpc.server.RegisterResponse;
 
 public class PayloadUtils {
     public static Payload toPayload(Message msg) {

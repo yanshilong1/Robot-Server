@@ -1,4 +1,4 @@
-package com.example.entity.rpc;
+package com.example.rpc;
 
 public class Message {
     public final static byte[] MAGIC_NUMBER = {1, 2, 3, 4};
