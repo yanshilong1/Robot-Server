@@ -26,3 +26,7 @@ JDK 1.8
 - 增加日志记录，删除`system.out`
 - 补充代码注释
 
+
+
+## 注册流程
+![注册流程时序图](./design/RegisterSeq.png)

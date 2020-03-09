@@ -1,0 +1,25 @@
+@startuml
+
+Robot -> Server: Open TCP Connection
+
+== Session Initialization ==
+
+Robot -> Server: Inform
+Robot <- Server: InformResponse
+
+== Communication ==
+
+Robot -> Server: Register
+Robot <- Server: RegisterResponse
+
+Robot -> Server: Idle
+Robot <- Server: Diagnostic
+
+Robot -> Server: DiagnosticResponse
+Robot <- Server: Idle
+
+== Session Closed ==
+
+Robot -> Server: Close TCP Connection
+
+@enduml

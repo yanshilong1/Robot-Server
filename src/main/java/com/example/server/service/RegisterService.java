@@ -17,7 +17,6 @@ public class RegisterService extends BaseService {
         INIT, REGISTER, DIAGNOSTIC, COMPLETE
     }
 
-//    private Inform inform;
     private Phase phase = Phase.INIT;
 
     @Override
