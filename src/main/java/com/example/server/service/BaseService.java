@@ -3,7 +3,7 @@ package com.example.server.service;
 import com.example.rpc.Payload;
 
 /**
- * 基础服务类
+ * 基础服务类，此处只定义了一个函数模板
  */
 public abstract class BaseService {
     protected String reqCommandId; // 请求消息ID

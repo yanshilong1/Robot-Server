@@ -13,6 +13,7 @@ import com.example.rpc.server.RegisterResponse;
 import com.example.server.Registry;
 
 public class RegisterService extends BaseService {
+    //注册的四个阶段
     private enum Phase {
         INIT, REGISTER, DIAGNOSTIC, COMPLETE
     }

@@ -7,8 +7,10 @@ import com.example.rpc.PayloadTypes;
 import java.util.UUID;
 
 public class Inform extends Payload {
+    //会话id uuid
     private String commandId;
     private String robotId;
+    //每次手动设置事件类型
     private EventTypes event;
 
     public Inform() {

@@ -37,15 +37,19 @@ public class HeartbeatService extends BaseService {
     }
 
     /**
-     * 处理Inform消息
-     * @param request
+     * 处理Inform消息 处理心跳
+     * @param request robotID
      * @return
      */
     private Payload handleInform(Payload request) {
+        //强转为子类型
         Inform inform = request.castAs(Inform.class);
         String robotId = inform.getRobotId();
+        //去服务发现的map里面寻找到发送心跳的robot----？如果这里找不到怎么办
         Robot robot = Registry.find(robotId);
+        //更新robot的最新一次心跳时间
         robot.setLastHeartbeatTime(LocalDateTime.now());
+        //心跳完成返回
         phase = Phase.COMPLETE;
         return new InformResponse(inform.getCommandId());
     }

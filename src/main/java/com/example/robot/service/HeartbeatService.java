@@ -43,7 +43,9 @@ public class HeartbeatService implements Runnable {
      */
     public static void stop() {
         executor.shutdown();
+        //关闭线程池
         try {
+            //最长关闭等待时机那
             executor.awaitTermination(5000, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             // ignore
@@ -52,10 +54,13 @@ public class HeartbeatService implements Runnable {
 
     @Override
     public void run() {
+        logger.info("心跳run方法开始--------------");
         try (Socket socket = new Socket(ServerCfg.hostName, ServerCfg.portNumber);
+
              OutputStream out = socket.getOutputStream();
              InputStream in = socket.getInputStream()) {
             process(in, out);
+            logger.info("心跳run方法结束--------------");
         } catch (IOException e) {
             logger.warn("心跳失败", e);
         }
@@ -73,21 +78,21 @@ public class HeartbeatService implements Runnable {
         inform.setEvent(EventTypes.HEARTBEAT);
         inform.setRobotId(RobotCfg.ROBOT_ID);
         Message msg = PayloadUtils.toMessage(inform);
-        logger.debug("robot发送: " + msg);
+        logger.debug("robot心跳发送Inform: " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收InformResponse
         msg = MessageIOUtils.read(in);
-        logger.debug("robot接收: " + msg);
+        logger.debug("robot心跳接收收InformResponse: " + msg);
 
         // 发Idle
         msg = PayloadUtils.toMessage(new Idle());
-        logger.debug("robot发送: " + msg);
+        logger.debug("robot心跳发送Idle : " + msg);
         MessageIOUtils.write(out, msg);
 
         // 收Idle
         msg = MessageIOUtils.read(in);
-        logger.debug("robot发送: " + msg);
+        logger.debug("robot心跳接收Idle: " + msg);
         logger.debug("心跳成功");
     }
 

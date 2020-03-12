@@ -39,6 +39,7 @@ public class MessageIOUtils {
     }
 
     public static void checkMagicNum(byte[] data) throws IOException {
+        //帕努单两个数组是否相等
         boolean success = Arrays.equals(Message.MAGIC_NUMBER, data);
         if(!success) {
             throw new IOException("Bad Data");

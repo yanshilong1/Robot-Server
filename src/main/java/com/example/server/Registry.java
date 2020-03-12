@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class Registry {
     private static final Logger logger = LogManager.getLogger(Registry.class);
 
+    //服务发现的map,key=rebotID  value rebot对象
     private static final ConcurrentSkipListMap<String, Robot> map = new ConcurrentSkipListMap<>();
 
     public static boolean register(Robot robot) {
